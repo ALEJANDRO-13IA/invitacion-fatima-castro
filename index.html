@@ -72,14 +72,15 @@ body{
 .invitacion{display:none;width:100%;max-width:560px;border-radius:12px;box-shadow:0 40px 80px -30px rgba(70,30,90,.5);opacity:0;transform:translateY(30px) scale(.96)}
 .abierto .invitacion{display:block;animation:aparecer .9s cubic-bezier(.2,.8,.2,1) forwards 1.2s}
 @keyframes aparecer{to{opacity:1;transform:none}}
-.img-wrap{position:relative;width:100%;line-height:0;border-radius:12px;overflow:hidden;background:#fdfaf5}
+.img-wrap{position:relative;width:100%;line-height:0;border-radius:12px;overflow:hidden;background:#fdfaf5;container-type:inline-size}
 .img-wrap img{width:100%;height:auto;display:block;max-width:100%}
 .hot{position:absolute;display:block;border-radius:40px;-webkit-tap-highlight-color:transparent;transition:box-shadow .2s,transform .2s;cursor:pointer;border:0;background:transparent;padding:0}
 .hot:hover,.hot:focus-visible{box-shadow:0 0 0 3px rgba(201,162,74,.85),0 10px 24px -8px rgba(70,30,90,.5);transform:translateY(-1px);outline:none}
-.familia{position:absolute;left:12%;right:12%;top:63.2%;height:7%;display:flex;align-items:center;justify-content:center;font-family:var(--script);font-size:clamp(2rem,9.5vw,3.6rem);color:#4d1f63;line-height:1;white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.6);pointer-events:none}
-.familia.larga{font-size:clamp(1.5rem,7vw,2.7rem)}
-.badge{position:absolute;left:46.9%;top:75.6%;width:5%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#8a4aa5,#5b2a6f 60%,#43194f);box-shadow:0 0 0 2px #f4e0b0,0 2px 6px rgba(60,20,80,.4);display:grid;place-items:center;font-family:var(--serif);font-weight:600;color:#fff;font-size:clamp(.9rem,3.6vw,1.4rem);line-height:1;pointer-events:none}
-.estado{position:absolute;left:25.6%;width:48.3%;top:55.3%;height:2.4%;display:flex;align-items:center;justify-content:center;font-size:clamp(.7rem,2.6vw,.95rem);font-weight:600;color:#2e7d4f;letter-spacing:.03em;pointer-events:none;line-height:1}
+.familia{position:absolute;left:12%;right:12%;top:63.2%;height:7%;display:flex;align-items:center;justify-content:center;font-family:var(--script);font-size:9.5cqw;color:#4d1f63;line-height:1;white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.6);pointer-events:none}
+.familia.larga{font-size:7cqw}
+.familia.xlarga{font-size:5.6cqw}
+.badge{position:absolute;left:46.9%;top:75.6%;width:5%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#8a4aa5,#5b2a6f 60%,#43194f);box-shadow:0 0 0 2px #f4e0b0,0 2px 6px rgba(60,20,80,.4);display:grid;place-items:center;font-family:var(--serif);font-weight:600;color:#fff;font-size:3.4cqw;line-height:1;pointer-events:none}
+.estado{position:absolute;left:25.6%;width:48.3%;top:55.3%;height:2.4%;display:flex;align-items:center;justify-content:center;font-size:2.5cqw;font-weight:600;color:#2e7d4f;letter-spacing:.03em;pointer-events:none;line-height:1}
 
 /* MODAL */
 .velo{position:fixed;inset:0;background:rgba(50,20,70,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
@@ -104,6 +105,8 @@ body{
 .gracias-ico{font-size:3rem;color:var(--oro);line-height:1}
 .err{color:#9b2c2c;font-size:.95rem;margin-top:8px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}.petalos{display:none}.abierto .invitacion{opacity:1;transform:none}.abierto .sobre-wrap,.abierto .pista{display:none}}
+.pill{position:absolute;left:20%;width:60%;top:73.8%;height:3.7%;display:flex;align-items:center;justify-content:center;gap:1.1cqw;font-family:var(--serif);font-weight:600;font-size:3.55cqw;color:#4d1f63;white-space:nowrap;pointer-events:none;line-height:1}
+.pill .b{display:inline-grid;place-items:center;width:4.9cqw;height:4.9cqw;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8a4aa5,#5b2a6f 60%,#43194f);box-shadow:0 0 0 0.2cqw #f4e0b0,0 0.2cqw 0.6cqw rgba(60,20,80,.4);color:#fff;font-size:3.4cqw}
 </style>
 </head>
 <body>
@@ -129,7 +132,7 @@ body{
     <div class="img-wrap">
       <img src="invitacion.jpg" alt="Invitación de graduación de Lic. Fátima Castro Rivera. Lugar: Assistenza Italiana. Viernes 18 de diciembre, 7:00 p.m.">
       <div class="familia" id="familia"></div>
-      <div class="badge" id="badge" hidden></div>
+      <div class="pill" id="pill" hidden>Hemos reservado <span class="b" id="badge"></span> <span id="pill-txt"></span></div>
       <div class="estado" id="estado"></div>
       <button class="hot" id="btn-confirmar" style="left:25.6%;top:58%;width:48.3%;height:5%" aria-label="Confirmar asistencia"></button>
       <a class="hot" href="https://waze.com/ul/hd42tc6bdg" target="_blank" rel="noopener" style="left:28.4%;top:79.5%;width:42.7%;height:6%" aria-label="Ver ubicación en Waze"></a>
@@ -165,6 +168,7 @@ body{
 /* ============ CONFIGURACIÓN ============ */
 var SHEET_URL = "https://script.google.com/macros/s/AKfycbzI4eKhwa1tXkF63bPv5I-QmICJA-jgihK-wR2qDgToMYqlv7NQKz2HS1tMdoFHrb7h/exec";                 // URL de la aplicación web de Google Apps Script (se pega aquí)
 var WHATSAPP  = "50370943721";      // respaldo si aún no hay hoja configurada
+var INVITADOS = {"pa6v": {"n": "Alejandro Valladares", "k": 1}, "jjb4": {"n": "Familia Escamilla", "k": 4}, "k8ry": {"n": "Familia Martínez Chávez", "k": 2}, "rzej": {"n": "Familia Martínez Rodas", "k": 4}, "7ps7": {"n": "Familia Martínez Salmeron", "k": 3}, "q3g5": {"n": "Familia Álvarez Martínez", "k": 4}, "uaek": {"n": "Familia Martínez Cruz", "k": 4}, "kf97": {"n": "Leticia Revelo", "k": 2}, "kpjr": {"n": "Nelson Medrano", "k": 1}, "34vm": {"n": "Familia González Menjivar", "k": 4}, "getw": {"n": "Eduardo Navidad", "k": 1}, "e8bp": {"n": "Kevin García", "k": 1}, "wv9p": {"n": "Fernanda Landaverde", "k": 1}, "22n2": {"n": "Herbert Morán", "k": 1}, "mwg4": {"n": "Javier Chávez", "k": 1}, "pbne": {"n": "Antonio Mejía", "k": 1}, "3tdv": {"n": "Kevin Lovo", "k": 1}, "aze7": {"n": "Jacqueline Torres", "k": 1}, "r2zv": {"n": "Familia Cornejo Reyes", "k": 2}, "azjt": {"n": "Familia Viche Sánchez", "k": 2}, "ww7d": {"n": "Gaby Sánchez", "k": 1}, "43z8": {"n": "Familia Turcios Renderos", "k": 2}, "fx9v": {"n": "Grachy Rivas", "k": 1}, "2jx2": {"n": "Camila Chirino", "k": 1}, "sc64": {"n": "Celeste Trejo", "k": 1}, "ja9e": {"n": "Omar Barahona", "k": 1}, "nywv": {"n": "Diego Pimentel", "k": 1}, "b48r": {"n": "Paola Muñoz", "k": 1}, "97zm": {"n": "Zaida Mendoza", "k": 1}, "xjzr": {"n": "Silvana", "k": 1}, "m8hx": {"n": "Vale Espinoza", "k": 1}, "raw5": {"n": "César Duran", "k": 1}, "93z5": {"n": "Rodrigo Salguero", "k": 1}, "tnrb": {"n": "Wilman Aguiñada", "k": 1}, "8vt3": {"n": "Pamela Leiva", "k": 1}, "htdb": {"n": "Fernando Aquino", "k": 1}, "pcc6": {"n": "Gabriela Meza", "k": 1}, "awb8": {"n": "Jenny Meza", "k": 1}, "k4dc": {"n": "Margarita Castillo", "k": 1}, "sf54": {"n": "Leonardo Cubias", "k": 1}, "8qmx": {"n": "Xiomara García", "k": 1}, "65z8": {"n": "Rocío Rodríguez", "k": 1}, "g88n": {"n": "Claudia Centeno", "k": 1}, "8pw6": {"n": "Mario Casco", "k": 1}, "2a4c": {"n": "Gaby Cerritos", "k": 1}, "g2q8": {"n": "Familia Lepeley Ventura", "k": 2}, "pcb9": {"n": "Johana Siguenza", "k": 1}, "ezcp": {"n": "Mauricio Rosales", "k": 1}, "6vms": {"n": "Emerson Sandoval", "k": 1}, "wjzc": {"n": "Geraldina Chávez", "k": 1}, "38qq": {"n": "Anita Dimas", "k": 1}, "hk34": {"n": "Alejandro Guerra", "k": 1}, "wdgd": {"n": "Familia Chávez Martínez", "k": 2}, "dmkr": {"n": "Bryan García", "k": 1}, "68y2": {"n": "Jarvin Montecino", "k": 2}, "5rqf": {"n": "Ximena Rosales", "k": 1}, "dkeb": {"n": "Familia Rivas Deras", "k": 5}, "a4dr": {"n": "Familia Araujo Serrano", "k": 3}, "cyrw": {"n": "Familia Montoya Benítez", "k": 2}, "47r6": {"n": "Isela Velásquez", "k": 1}, "gtr2": {"n": "Familia Velásquez Ayala", "k": 2}, "kvdu": {"n": "Isis Osegueda", "k": 1}, "84gh": {"n": "Jireh Barahona", "k": 1}, "rst5": {"n": "Cindy Moreno", "k": 1}, "63v5": {"n": "Daysi Morales", "k": 1}, "p2qy": {"n": "Estela Bolaños", "k": 1}, "cppv": {"n": "Familia Hernández Bendaña", "k": 2}, "we5w": {"n": "Jenny Escobar", "k": 1}, "34w2": {"n": "Nancy Acosta", "k": 1}, "bwwf": {"n": "Andres Salinas", "k": 1}, "2jwn": {"n": "Wendy Latin", "k": 1}, "z8du": {"n": "Silvia Deodanes", "k": 1}, "xpv8": {"n": "Mirna Reyes", "k": 1}, "jb9r": {"n": "Doris González", "k": 1}, "7ku7": {"n": "Donaldo de Leon", "k": 2}, "vcyp": {"n": "Maybell Hernández", "k": 4}};
 /* ======================================= */
 
 (function(){
@@ -183,12 +187,13 @@ var WHATSAPP  = "50370943721";      // respaldo si aún no hay hoja configurada
       return {familia:p[0].trim(), cupos:n, codigo:h};
     }catch(e){return null;}
   }
-  var fam=decodificar(location.hash||'');
+  var h0=(location.hash||'').replace(/^#/,'').toLowerCase();
+  var fam = INVITADOS[h0] ? {familia:INVITADOS[h0].n, cupos:INVITADOS[h0].k, codigo:h0} : decodificar(location.hash||'');
   var destEl=document.getElementById('destinatario'), famEl=document.getElementById('familia'), badge=document.getElementById('badge');
   if(fam){
     destEl.textContent=fam.familia; famEl.textContent=fam.familia;
-    if(fam.familia.length>20) famEl.classList.add('larga');
-    badge.textContent=fam.cupos; badge.hidden=false;
+    if(fam.familia.length>26) famEl.classList.add('xlarga'); else if(fam.familia.length>20) famEl.classList.add('larga');
+    badge.textContent=fam.cupos; document.getElementById('pill-txt').textContent=(fam.cupos===1?'espacio para ti.':'espacios para ustedes.'); document.getElementById('pill').hidden=false;
   }
 
   // ---- estado guardado (ya confirmó desde este teléfono) ----

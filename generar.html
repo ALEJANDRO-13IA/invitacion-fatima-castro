@@ -24,7 +24,10 @@ button,a.b{flex:1;padding:12px;border-radius:10px;border:0;font-family:inherit;f
 .lista{margin-top:20px}
 .lista h2{font-size:1.2rem;color:var(--morado);margin:0 0 8px}
 .item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid #e9dcee;font-size:1rem;align-items:center}
-.item button{flex:0;padding:6px 10px;font-size:.9rem}
+.item button,.item a.b{flex:0 0 auto;padding:6px 10px;font-size:.9rem;white-space:nowrap}
+.item .acc{display:flex;gap:6px}
+.buscar{margin-bottom:10px}
+.base{font-size:.95rem;color:#6b5a74;margin:0 0 10px}
 </style>
 </head>
 <body>
@@ -43,6 +46,13 @@ button,a.b{flex:1;padding:12px;border-radius:10px;border:0;font-family:inherit;f
     <a class="b s" id="ver" href="#" target="_blank" rel="noopener">Probar</a>
   </div>
   <p class="nota">Cada enlace lleva el nombre de la familia y sus cupos. Al abrirlo, la familia ve su nombre en la invitación y, al confirmar, elige cuántos de sus cupos asistirán. Las respuestas llegan a tu hoja de Google.</p>
+</div>
+
+<div class="card lista">
+  <h2>Lista de invitados (<span id="total"></span>)</h2>
+  <p class="base">Cada invitado tiene su enlace corto. Toca <b>WhatsApp</b> para enviárselo con el mensaje listo, o <b>Copiar</b>.</p>
+  <input class="buscar" id="buscar" placeholder="Buscar invitado…" autocomplete="off">
+  <div id="inv"></div>
 </div>
 
 <div class="card lista" id="lista" hidden>
@@ -84,6 +94,29 @@ button,a.b{flex:1;padding:12px;border-radius:10px;border:0;font-family:inherit;f
     });
   }
   lista();
+
+  // ---- lista fija de invitados ----
+  var INVITADOS = {"pa6v": {"n": "Alejandro Valladares", "k": 1}, "jjb4": {"n": "Familia Escamilla", "k": 4}, "k8ry": {"n": "Familia Martínez Chávez", "k": 2}, "rzej": {"n": "Familia Martínez Rodas", "k": 4}, "7ps7": {"n": "Familia Martínez Salmeron", "k": 3}, "q3g5": {"n": "Familia Álvarez Martínez", "k": 4}, "uaek": {"n": "Familia Martínez Cruz", "k": 4}, "kf97": {"n": "Leticia Revelo", "k": 2}, "kpjr": {"n": "Nelson Medrano", "k": 1}, "34vm": {"n": "Familia González Menjivar", "k": 4}, "getw": {"n": "Eduardo Navidad", "k": 1}, "e8bp": {"n": "Kevin García", "k": 1}, "wv9p": {"n": "Fernanda Landaverde", "k": 1}, "22n2": {"n": "Herbert Morán", "k": 1}, "mwg4": {"n": "Javier Chávez", "k": 1}, "pbne": {"n": "Antonio Mejía", "k": 1}, "3tdv": {"n": "Kevin Lovo", "k": 1}, "aze7": {"n": "Jacqueline Torres", "k": 1}, "r2zv": {"n": "Familia Cornejo Reyes", "k": 2}, "azjt": {"n": "Familia Viche Sánchez", "k": 2}, "ww7d": {"n": "Gaby Sánchez", "k": 1}, "43z8": {"n": "Familia Turcios Renderos", "k": 2}, "fx9v": {"n": "Grachy Rivas", "k": 1}, "2jx2": {"n": "Camila Chirino", "k": 1}, "sc64": {"n": "Celeste Trejo", "k": 1}, "ja9e": {"n": "Omar Barahona", "k": 1}, "nywv": {"n": "Diego Pimentel", "k": 1}, "b48r": {"n": "Paola Muñoz", "k": 1}, "97zm": {"n": "Zaida Mendoza", "k": 1}, "xjzr": {"n": "Silvana", "k": 1}, "m8hx": {"n": "Vale Espinoza", "k": 1}, "raw5": {"n": "César Duran", "k": 1}, "93z5": {"n": "Rodrigo Salguero", "k": 1}, "tnrb": {"n": "Wilman Aguiñada", "k": 1}, "8vt3": {"n": "Pamela Leiva", "k": 1}, "htdb": {"n": "Fernando Aquino", "k": 1}, "pcc6": {"n": "Gabriela Meza", "k": 1}, "awb8": {"n": "Jenny Meza", "k": 1}, "k4dc": {"n": "Margarita Castillo", "k": 1}, "sf54": {"n": "Leonardo Cubias", "k": 1}, "8qmx": {"n": "Xiomara García", "k": 1}, "65z8": {"n": "Rocío Rodríguez", "k": 1}, "g88n": {"n": "Claudia Centeno", "k": 1}, "8pw6": {"n": "Mario Casco", "k": 1}, "2a4c": {"n": "Gaby Cerritos", "k": 1}, "g2q8": {"n": "Familia Lepeley Ventura", "k": 2}, "pcb9": {"n": "Johana Siguenza", "k": 1}, "ezcp": {"n": "Mauricio Rosales", "k": 1}, "6vms": {"n": "Emerson Sandoval", "k": 1}, "wjzc": {"n": "Geraldina Chávez", "k": 1}, "38qq": {"n": "Anita Dimas", "k": 1}, "hk34": {"n": "Alejandro Guerra", "k": 1}, "wdgd": {"n": "Familia Chávez Martínez", "k": 2}, "dmkr": {"n": "Bryan García", "k": 1}, "68y2": {"n": "Jarvin Montecino", "k": 2}, "5rqf": {"n": "Ximena Rosales", "k": 1}, "dkeb": {"n": "Familia Rivas Deras", "k": 5}, "a4dr": {"n": "Familia Araujo Serrano", "k": 3}, "cyrw": {"n": "Familia Montoya Benítez", "k": 2}, "47r6": {"n": "Isela Velásquez", "k": 1}, "gtr2": {"n": "Familia Velásquez Ayala", "k": 2}, "kvdu": {"n": "Isis Osegueda", "k": 1}, "84gh": {"n": "Jireh Barahona", "k": 1}, "rst5": {"n": "Cindy Moreno", "k": 1}, "63v5": {"n": "Daysi Morales", "k": 1}, "p2qy": {"n": "Estela Bolaños", "k": 1}, "cppv": {"n": "Familia Hernández Bendaña", "k": 2}, "we5w": {"n": "Jenny Escobar", "k": 1}, "34w2": {"n": "Nancy Acosta", "k": 1}, "bwwf": {"n": "Andres Salinas", "k": 1}, "2jwn": {"n": "Wendy Latin", "k": 1}, "z8du": {"n": "Silvia Deodanes", "k": 1}, "xpv8": {"n": "Mirna Reyes", "k": 1}, "jb9r": {"n": "Doris González", "k": 1}, "7ku7": {"n": "Donaldo de Leon", "k": 2}, "vcyp": {"n": "Maybell Hernández", "k": 4}};
+  var BASE_CORTA = "https://is.gd/InvitacionFatimaCastro";
+  var inv=document.getElementById('inv'), buscar=document.getElementById('buscar');
+  var arr=Object.keys(INVITADOS).map(function(k){return {c:k,n:INVITADOS[k].n,k:INVITADOS[k].k};});
+  document.getElementById('total').textContent=arr.length;
+  function msgDe(n,k,u){ return '¡Hola! Con mucho cariño '+(k===1?'te compartimos':'les compartimos')+' la invitación a la graduación de Fátima. '+n+', hemos reservado '+k+(k===1?' espacio para ti':' espacios para ustedes')+'. '+(k===1?'Ábrela':'Ábranla')+' aquí y '+(k===1?'confirma tu':'confirmen su')+' asistencia: '+u; }
+  function pintarInv(){
+    var q=(buscar.value||'').toLowerCase(); inv.innerHTML='';
+    arr.filter(function(x){return !q||x.n.toLowerCase().indexOf(q)>=0;}).forEach(function(x){
+      var u=BASE_CORTA+'#'+x.c;
+      var d=document.createElement('div');d.className='item';
+      var sp=document.createElement('span');sp.innerHTML='<b></b> · '+x.k+(x.k===1?' espacio':' espacios');sp.querySelector('b').textContent=x.n;
+      var acc=document.createElement('div');acc.className='acc';
+      var cb=document.createElement('button');cb.className='s';cb.textContent='Copiar';
+      cb.onclick=function(){ var done=function(){cb.textContent='¡Copiado!';setTimeout(function(){cb.textContent='Copiar';},1500);};
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,done);}else{done();} };
+      var wa=document.createElement('a');wa.className='b p';wa.textContent='WhatsApp';wa.target='_blank';wa.rel='noopener';wa.href='https://wa.me/?text='+encodeURIComponent(msgDe(x.n,x.k,u));
+      acc.appendChild(cb);acc.appendChild(wa);d.appendChild(sp);d.appendChild(acc);inv.appendChild(d);
+    });
+  }
+  buscar.addEventListener('input',pintarInv); pintarInv();
 })();
 </script>
 </body>
