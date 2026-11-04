@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enlaces por familia</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap">
+<style>
+:root{--morado:#5b2a6f;--oro:#c9a24a;--papel:#fffdf8;--tinta:#3f2b4a}
+body{margin:0;font-family:'Cormorant Garamond',Georgia,serif;background:#efe6f3;color:var(--tinta);padding:24px 16px;display:flex;justify-content:center}
+main{width:100%;max-width:560px}
+h1{color:var(--morado);font-weight:600;margin:0 0 4px;font-size:2rem}
+.sub{margin:0 0 20px;font-style:italic;color:#7a3e90}
+.card{background:var(--papel);border-radius:14px;box-shadow:0 0 0 1px rgba(201,162,74,.5),0 20px 40px -24px rgba(70,30,90,.5);padding:20px}
+label{display:block;font-weight:600;margin:12px 0 4px;color:var(--morado)}
+input{width:100%;box-sizing:border-box;padding:11px 12px;font-family:inherit;font-size:1.15rem;border:1px solid var(--oro);border-radius:10px;background:#fff;color:var(--tinta)}
+.row{display:grid;grid-template-columns:1fr 110px;gap:12px}
+.out{margin-top:16px;padding:12px;background:#f7eef5;border-radius:10px;word-break:break-all;font-size:1rem;border:1px dashed var(--oro)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button,a.b{flex:1;padding:12px;border-radius:10px;border:0;font-family:inherit;font-size:1.05rem;font-weight:600;cursor:pointer;text-align:center;text-decoration:none}
+.p{background:var(--morado);color:#fff}.s{background:#fff;color:var(--morado);box-shadow:0 0 0 1px var(--oro)}
+.nota{font-size:.95rem;color:#6b5a74;margin-top:18px;line-height:1.45}
+.lista{margin-top:20px}
+.lista h2{font-size:1.2rem;color:var(--morado);margin:0 0 8px}
+.item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid #e9dcee;font-size:1rem;align-items:center}
+.item button{flex:0;padding:6px 10px;font-size:.9rem}
+</style>
+</head>
+<body>
+<main>
+<h1>Enlaces por familia</h1>
+<p class="sub">Graduación de Lic. Fátima Castro Rivera</p>
+<div class="card">
+  <div class="row">
+    <div><label for="f">Familia</label><input id="f" placeholder="Familia Escamilla" autocomplete="off"></div>
+    <div><label for="c">Cupos</label><input id="c" type="number" min="1" max="30" value="2"></div>
+  </div>
+  <div class="out" id="out">El enlace aparecerá aquí.</div>
+  <div class="btns">
+    <button class="p" id="copiar">Copiar enlace</button>
+    <a class="b s" id="wa" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+    <a class="b s" id="ver" href="#" target="_blank" rel="noopener">Probar</a>
+  </div>
+  <p class="nota">Cada enlace lleva el nombre de la familia y sus cupos. Al abrirlo, la familia ve su nombre en la invitación y, al confirmar, elige cuántos de sus cupos asistirán. Las respuestas llegan a tu hoja de Google.</p>
+</div>
+
+<div class="card lista" id="lista" hidden>
+  <h2>Enlaces generados en este dispositivo</h2>
+  <div id="items"></div>
+</div>
+</main>
+<script>
+(function(){
+  var base=location.href.replace(/generar\.html.*$/,'');
+  var f=document.getElementById('f'),c=document.getElementById('c'),out=document.getElementById('out'),wa=document.getElementById('wa'),ver=document.getElementById('ver');
+  var hist=[]; try{hist=JSON.parse(localStorage.getItem('enlaces')||'[]');}catch(e){}
+  function codigo(nombre,n){ return btoa(unescape(encodeURIComponent(nombre+'|'+n))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function enlace(){ var n=f.value.trim(), k=parseInt(c.value,10); if(!n||!(k>=1&&k<=30))return null; return base+'#'+codigo(n,k); }
+  function pintar(){
+    var u=enlace();
+    out.textContent=u||'Escribe el nombre de la familia y los cupos.';
+    var n=f.value.trim(),k=c.value;
+    var msg='¡Hola! Con mucho cariño les compartimos la invitación a la graduación de Fátima. '+n+', hemos reservado '+k+(k==1?' espacio':' espacios')+' para ustedes. Ábranla aquí y confirmen su asistencia: '+(u||'');
+    wa.href=u?'https://wa.me/?text='+encodeURIComponent(msg):'#'; ver.href=u||'#';
+  }
+  f.addEventListener('input',pintar); c.addEventListener('input',pintar); pintar();
+  document.getElementById('copiar').addEventListener('click',function(){
+    var u=enlace(); if(!u)return;
+    var ok=function(){ this.textContent='¡Copiado!'; setTimeout(function(){document.getElementById('copiar').textContent='Copiar enlace';},1500);
+      hist=hist.filter(function(h){return h.u!==u;}); hist.unshift({n:f.value.trim(),k:c.value,u:u}); hist=hist.slice(0,200);
+      try{localStorage.setItem('enlaces',JSON.stringify(hist));}catch(e){} lista(); }.bind(this);
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(u).then(ok,function(){ seleccionar(); ok(); }); } else { seleccionar(); ok(); }
+  });
+  function seleccionar(){ var r=document.createRange(); r.selectNodeContents(out); var s=getSelection(); s.removeAllRanges(); s.addRange(r); try{document.execCommand('copy');}catch(e){} }
+  function lista(){
+    var L=document.getElementById('lista'),I=document.getElementById('items'); I.innerHTML='';
+    L.hidden=!hist.length;
+    hist.forEach(function(h){
+      var d=document.createElement('div');d.className='item';
+      d.innerHTML='<span><b>'+h.n.replace(/</g,'&lt;')+'</b> · '+h.k+' cupos</span>';
+      var b=document.createElement('button');b.className='s';b.textContent='Usar';b.onclick=function(){f.value=h.n;c.value=h.k;pintar();window.scrollTo(0,0);};
+      d.appendChild(b);I.appendChild(d);
+    });
+  }
+  lista();
+})();
+</script>
+</body>
+</html>
